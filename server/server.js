@@ -16,10 +16,24 @@ const app = express();
 
 // Middleware
 app.use(helmet());
+
+// ✅ Whitelist CORS origins
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://ai-code-review-app-2222.vercel.app" // production
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -34,7 +48,6 @@ app.use('/api/users', userRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
-
 
 // 404 handler
 app.use((req, res) => {
