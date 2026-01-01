@@ -1,0 +1,16 @@
+{
+  "name": "code-review-app",
+  "version": "1.0.0",
+  "description": "Full-stack code review application",
+  "scripts": {
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
