@@ -17,7 +17,7 @@ const app = express();
 // Middleware
 app.use(helmet());
 
-// ✅ CORS - Allow ALL localhost ports
+// ✅ CORS - Allow localhost AND production frontend
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, Postman, etc.)
@@ -25,6 +25,11 @@ app.use(cors({
     
     // Allow all localhost origins
     if (origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    
+    // Allow production frontend
+    if (origin === process.env.CLIENT_URL) {
       return callback(null, true);
     }
     
