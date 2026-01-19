@@ -14,31 +14,40 @@ const Navbar = () => {
     navigate('/');
   };
 
+  // ✅ Smart home link - goes to dashboard if logged in, home if not
+  const homeLink = isAuthenticated ? '/dashboard' : '/';
+
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <Link to={homeLink} className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             <Code2 className="w-6 h-6" />
             <span>CodeReview</span>
           </Link>
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link to="/browse" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-              Browse
-            </Link>
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                   Dashboard
                 </Link>
+                <Link to="/browse" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  Browse
+                </Link>
                 <Link to="/submit" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                   Submit Code
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  Home
+                </Link>
+                <Link to="/browse" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  Browse
                 </Link>
               </>
             )}

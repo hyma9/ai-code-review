@@ -17,19 +17,19 @@ const app = express();
 // Middleware
 app.use(helmet());
 
-// ✅ Whitelist CORS origins
-const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://ai-code-review-app-2222.vercel.app" // production
-];
-
+// ✅ CORS - Allow ALL localhost ports
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow all localhost origins
+    if (origin.startsWith('http://localhost:')) {
+      return callback(null, true);
     }
+    
+    // Block other origins
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true
 }));
@@ -63,10 +63,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Connect to MongoDB once at startup
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// ✅ Export app for Vercel
-module.exports = app;
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
